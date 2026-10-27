@@ -148,14 +148,14 @@ enum LdacQualityIndex : uint8_t {
     QUALITY_ABR = 0x7F,
 };
 
-enum LhdcLowLatencyEn : uint8_t {
-	Enabled = 1,
-	Disabled = 0,
+enum LhdcLlSupport : uint8_t {
+    Unsupported = 0x00,
+    Supported = 0x01,
 };
 
-enum LhdcLowLatencySupported : uint8_t {
-	Supported = 1,
-	Unsupported = 0,
+enum LowLatencyEnabled : uint8_t {
+    Disabled = 0x00,
+    Enabled = 0x01,
 };
 
 /** Used for Software Encoding audio feed parameters */
@@ -163,7 +163,7 @@ struct PcmParameters {
     SampleRate sampleRate;
     ChannelMode channelMode;
     BitsPerSample bitsPerSample;
-    LhdcLowLatencyEn lowLatencyEnable;
+    LowLatencyEnabled isLowLatencyEnabled;
 };
 
 /**
@@ -202,24 +202,19 @@ struct LdacParameters {
     BitsPerSample bitsPerSample;
 };
 
-/**
- * Used for Hardware Encoding LHDC codec parameters
- * Only used when configuring the codec. When Capabilities are requested, this
- * field is left empty since all qualities must be supported. Not a bitfield.
- */
-struct LhdcParameters {
-    SampleRate sampleRate;
-    ChannelMode channelMode;
-    BitsPerSample bitsPerSample;
-    LhdcLowLatencyEn lowLatencyEnable;
-    LhdcLowLatencySupported lowLatencySupported;
-};
-
 /** Used for Hardware Encoding AptX and AptX-HD codec parameters */
 struct AptxParameters {
     SampleRate sampleRate;
     ChannelMode channelMode;
     BitsPerSample bitsPerSample;
+};
+
+struct LhdcParameters {
+    SampleRate sampleRate;
+    ChannelMode channelMode;
+    BitsPerSample bitsPerSample;
+    LowLatencyEnabled isLLEnabled;
+    LhdcLlSupport isLLSupported;
 };
 
 /**

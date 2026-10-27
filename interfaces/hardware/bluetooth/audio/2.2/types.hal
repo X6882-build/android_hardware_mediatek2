@@ -21,11 +21,10 @@ import @2.1::ChannelMode;
 import @2.1::CodecCapabilities;
 import @2.1::CodecConfiguration;
 import @2.1::CodecType;
+import @2.1::LowLatencyEnabled;
 import @2.1::PcmParameters;
 import @2.1::SampleRate;
 import @2.1::SessionType;
-import @2.1::LhdcLowLatencyEn;
-import @2.1::LhdcLowLatencySupported;
 
 enum SessionType : @2.1::SessionType {
     /** Used when encoded by Bluetooth Stack and streaming to LE Audio device */
@@ -52,10 +51,7 @@ struct PcmParameters {
     SampleRate sampleRate;
     ChannelMode channelMode;
     BitsPerSample bitsPerSample;
-
-    /* LHDC Low Latency */
-    LhdcLowLatencyEn lowLatencyEnable;
-
+    LowLatencyEnabled isLowLatencyEnabled;
     /** Data interval for data transfer */
     uint32_t dataIntervalUs;
 };
@@ -99,7 +95,12 @@ safe_union AudioCapabilities {
     LeAudioCodecCapabilities leAudioCapabilities;
 };
 
-/* packet-loss concealment algorithm methods */
+struct ConnParam {
+    int32_t conn_handle_R;
+    int32_t conn_handle_L;
+    int8_t bn;
+};
+
 enum PlcMethod : uint8_t {
     STANDARD_PLC = 0x00,
     ENHANCED_PLC = 0x01,
@@ -113,10 +114,10 @@ struct LeAudioCodecConfiguration {
     /* This is also bitfield, specifying how the channels are ordered in the outgoing media packet.
      * Bit meaning is defined in Bluetooth Assigned Numbers. */
     uint32_t audioChannelAllocation;
-    uint32_t audioBitrate;
-    bool badFrame;
-    PlcMethod plcMethod;
-    uint8_t leAudioType;
+    uint32_t encodedAudioBitrate;
+    uint8_t bfi_ext;
+    PlcMethod plc_method;
+    uint8_t le_audio_type;
     Lc3Parameters lc3Config;
 };
 
@@ -125,10 +126,4 @@ safe_union AudioConfiguration {
     PcmParameters pcmConfig;
     CodecConfiguration codecConfig;
     LeAudioCodecConfiguration leAudioCodecConfig;
-};
-
-struct ConnParam {
-    uint32_t connParamRead;
-    uint32_t connParamList;
-    uint8_t burstNum;
 };
